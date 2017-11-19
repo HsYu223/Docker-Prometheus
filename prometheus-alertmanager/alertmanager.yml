@@ -1,0 +1,21 @@
+global:
+  smtp_smarthost: 'localhost:25'
+  smtp_from: 'alertmanager@example.org'
+
+route:
+  receiver: "alerta"
+  group_by: ['alertname','instance','type']
+  group_wait:      10s
+
+receivers:
+- name: "alerta"
+  webhook_configs:
+  - url: 'Your webhook url'
+    send_resolved: true
+
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'instance', 'mountpoint']
