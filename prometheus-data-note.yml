@@ -1,0 +1,31 @@
+# 附加label、relabel設定
+
+  - job_name: 'EAWEB'
+    scrape_interval: 10s
+    metrics_path: '/api/metrics'
+    static_configs:
+      - targets: ['empinfo-t.evertrust.com.tw:80']
+        labels: 
+          service: empinfo
+      - targets: ['srvdocker2-t:32771']
+        labels:
+          service: accesslog-receiver
+    relabel_configs:
+      - source_labels: ['__address__']
+        target_label: instance
+        regex: '([^.]+).*'
+        replacement: '${1}'
+
+# 連接驗證設定
+
+  - job_name: k8s-n4
+    scrape_interval: 15s
+    scheme: 'https'
+    tls_config:
+      cert_file: /prometheus-data/crt.pem
+      key_file: /prometheus-data/key.pem
+      server_name: https://srvk8s-n4:10250
+      insecure_skip_verify: true
+    metrics_path: '/metrics/cadvisor'
+    static_configs:
+      - targets: ['srvk8s-n4:10250']
