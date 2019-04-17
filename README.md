@@ -16,7 +16,8 @@ docker run --name alertmanager -p 9093:9093 -v /data/prometheus-alertmanager:/pr
 但是在啟動Docker的時候也可以額外做一些設定
 ```bash
 # 用来設定資料儲存時間，168h0m0s表示24*7小时，即1週
--storage.local.retention 168h0m0s \
+XXXXX -storage.local.retention 168h0m0s \
+--storage.tsdb.retention 30d
 
 # 等待寫入磁碟的最大chunks數,超過大小寫入會被限制,建議設定為storage.local.memory-chunks的50%
 -storage.local.max-chunks-to-persist 3024288 \
@@ -34,3 +35,6 @@ docker run --name alertmanager -p 9093:9093 -v /data/prometheus-alertmanager:/pr
 -storage.local.checkpoint-interval
 
 ```
+
+# 參考連結
+https://mkezz.wordpress.com/2017/11/13/prometheus-command-line-flags-in-docker-service/
