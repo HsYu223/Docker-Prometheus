@@ -29,3 +29,24 @@
     metrics_path: '/metrics/cadvisor'
     static_configs:
       - targets: ['srvk8s-n4:10250']
+      
+  - job_name: 'piwik_google_cAdvisor'
+    static_configs:
+      - targets: ['10.1.1.38:8080','10.1.1.42:8080','10.1.1.50:8080']
+    relabel_configs:
+      - source_labels: ['__address__']
+        target_label: instance
+        regex: '([^:9111]+).*'
+        replacement: '${1}'
+        
+  - job_name: 'elasticsearch'
+    scrape_interval: 30s
+    file_sd_configs:
+      - files:
+        - /prometheus-data/elastic_targets.json
+    relabel_configs:
+      - source_labels: ['elasticsearch']
+        separator: ;
+        regex: (.*)
+        target_label:  instance
+        replacement:   ${1}
